@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react"
+import React,{useState,useEffect,useRef} from "react"
 
 function Section(props){
     // props.handleDisplay is the function which need to be trigerred on parent component side
@@ -13,6 +13,9 @@ function Section(props){
     // these state will help to decide whether we have to show lists or not
     const [groupList,setGroupList] = useState(0);
     const [orderList,setOrderList] = useState(0);
+
+    // for efficient closing of dropdown
+    const divRef = useRef();
 
     useEffect(function(){
 
@@ -29,7 +32,17 @@ function Section(props){
             props.handleOrdering(obj[value]);
         }
 
-    },[]);
+        const closeDropDown = function(event){
+            if(!divRef.current.contains(event.target)){
+                setView(0);
+                setGroupList(0);setOrderList(0);
+            }
+        };
+
+        document.body.addEventListener("click",closeDropDown);
+        // during unmounting
+        return function(){document.body.removeEventListener("click",closeDropDown)}
+    },[props]);
 
     function handleDisplayClick(){
         setView(function(prev_val){
@@ -89,14 +102,15 @@ function Section(props){
 
     return(
         //creating dropdown display feature using react
-        <div className="dropdown">
+        <div className="dropdown" ref={divRef}>
         {/*Display named button, which will change its state on click*/}
 
             <button className="dropdownButton" onClick={handleDisplayClick}>
                 {/* used for icon displaying of tune using google fonts*/}
                 <span className="material-icons material-symbols-outlined tune">tune</span>
                 <h1 className="dropdownText">Display</h1>
-                <span className="material-icons material-symbols-outlined tune">expand_more</span>
+                {view===1?<span class="material-symbols-outlined tune">expand_less</span>:
+                <span className="material-icons material-symbols-outlined tune">expand_more</span>}
             </button>
 
             {/* View is state which will change when, onClick event will happen for display button*/}
@@ -107,7 +121,11 @@ function Section(props){
                         <p>Grouping</p>
                         {/* using html select tag for selecting grouping options */}
                         
-                        <button className="gbtn" onClick={handleGroupList}>{grouping}<span className="material-icons material-symbols-outlined tune">expand_more</span></button>
+                        <button className="gbtn" onClick={handleGroupList}>
+                            {grouping}
+                            {groupList===1?<span class="material-symbols-outlined tune">expand_less</span>:
+                            <span className="material-icons material-symbols-outlined tune">expand_more</span>}
+                        </button>
                         {groupList===1?
                             <div className="groupList">
                                 <button name="status" onClick={handleChoice}>Status</button>
@@ -119,7 +137,11 @@ function Section(props){
                     <div className="ordering">
                         <p>Ordering</p>
                         
-                        <button className="pbtn" onClick={handleOrderList}>{ordering}<span className="material-icons material-symbols-outlined tune">expand_more</span></button>
+                        <button className="pbtn" onClick={handleOrderList}>
+                            {ordering}
+                            {orderList===1?<span class="material-symbols-outlined tune">expand_less</span>:
+                            <span className="material-icons material-symbols-outlined tune">expand_more</span>}
+                        </button>
                         {orderList===1?
                             <div className="orderList">
                                 <button name="orderpriority" onClick={handleChoice}>Priority</button>

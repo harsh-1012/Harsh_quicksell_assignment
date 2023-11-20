@@ -23,7 +23,6 @@ function User(props){
         const tickets = props.data.tickets;
         const users = props.data.users;
 
-        // refreshing array
         setArr([[]]);
 
         tickets.forEach(function(ticket){
@@ -35,17 +34,18 @@ function User(props){
                 if(!new_arr[index]){
                     new_arr[index]=[];
                 }
-                new_arr[index].push(ticket);
+                if(new_arr[index].indexOf(ticket) === -1)
+                    new_arr[index].push(ticket);
                 return new_arr;
             });
         });
         setUser(users);
-    },[props.data]);
+    },[props.data.tickets,props.data.users]);
 
 
     function createCard(ticket,index){
         return (
-            <div key={ticket.id}>
+            <div key={index}>
                 <Card ticket={ticket} index={index}/>
             </div>
         );

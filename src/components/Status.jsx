@@ -2,7 +2,6 @@ import React,{useState,useEffect} from "react"
 import Card from "./CardStatus.jsx"
 
 function Status(props){
-    console.log(props.data.tickets)
     // props.data is the data which is being received from the API endpoint
     // props.ordering will carry how to order card under each status
 
@@ -20,42 +19,47 @@ function Status(props){
     const [backlog,setBacklog]=useState([]);
     
     const [user,setUser]=useState([]);
-    
+
     useEffect(function(){
         const tickets = props.data.tickets;
         const users = props.data.users;
-
-        // refreshing arrays
+    
         setTodo([]);setInProgress([]);setDone([]);setCancelled([]);setBacklog([]);
 
         tickets.forEach(function(ticket){
             // ticket.status will tell either it is in pending,todo.. state
             if(ticket.status==="Todo"){
                 setTodo(function(prev_arr){
-                    return [...prev_arr,ticket]; // spread operator has been used to keep previous value as it is
+                    let new_arr = [...prev_arr]; // spread operator has been used to keep previous value as it is
+                    return [...new_arr,ticket]; 
                 })
             }else if(ticket.status==="In progress"){
                 setInProgress(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else if(ticket.status==="Backlog"){
                 setBacklog(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else if(ticket.status==="Done"){
                 setDone(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 })
             }else{
                 setCancelled(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }
         });
+
         // this is done because in order to show availability on each post this array is required
         // will use it optimally
         setUser(users);
-    },[props.data]);
+    },[props.data.tickets,props.data.users]);
 
     // this function creates card which will be shown under each section
     // map will create new array of these cards and will print
@@ -66,7 +70,7 @@ function Status(props){
         const userData = user[(ticket.userId[4]-'0')-1];
 
         return (
-            <div key={ticket.id}>
+            <div key={index}>
                 <Card ticket={ticket} userData={userData} index={index}/>
             </div>
         );

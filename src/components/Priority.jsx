@@ -16,7 +16,6 @@ function Priority(props){
         const tickets = props.data.tickets;
         const users = props.data.users;
 
-        //refreshing arrays
         setUrgent([]);setHigh([]);setMedium([]);setLow([]);setNo([]);
 
         tickets.forEach(function(ticket){
@@ -24,23 +23,28 @@ function Priority(props){
             
             if(ticket.priority===4){
                 setUrgent(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else if(ticket.priority===3){
                 setHigh(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else if(ticket.priority===2){
                 setMedium(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else if(ticket.priority===1){
                 setLow(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }else{
                 setNo(function(prev_arr){
-                    return [...prev_arr,ticket];
+                    let new_arr = [...prev_arr];
+                    return [...new_arr,ticket]; 
                 });
             }
         });
@@ -58,7 +62,7 @@ function Priority(props){
         const userData = user[(ticket.userId[4]-'0')-1];
 
         return (
-            <div key={ticket.id}>
+            <div key={index}>
                 <Card ticket={ticket} userData={userData} index={index}/>
             </div>
         );
